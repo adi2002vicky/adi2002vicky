@@ -1,0 +1,105 @@
+Solution 1:
+    // function should return sum of last n nodes
+    Node* Reverse(struct Node* &head){
+        struct Node* curr=head;
+        struct Node* prev=NULL;
+        struct Node* next=NULL;
+        
+        if(head==NULL || head->next==NULL){
+            return head;
+        }
+        
+        while(curr!=NULL){
+            next=curr->next;
+            curr->next = prev;
+            prev=curr;
+            curr=next;
+        }
+        
+        return prev;
+    }
+    int sumOfLastN_Nodes(struct Node* head, int n) {
+        head=Reverse(head);
+        int sum=0;
+        struct Node* curr=head;
+        while(n!=0 && curr!=NULL){
+         sum=sum+curr->data;
+         curr=curr->next;
+            n--;
+        }
+        return sum;
+    }
+};
+
+
+Solution 2:
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+class Solution {
+public:
+    int sumOfLastN_Nodes(Node* head, int n) {
+        Node* first = head;
+        Node* second = head;
+        
+        // Move the first pointer n steps ahead
+        for (int i = 0; i < n; i++) {
+            if (first != NULL) {
+                first = first->next;
+            }
+        }
+        
+        // Move both first and second pointers until first reaches the end
+        while (first != NULL) {
+            first = first->next;
+            second = second->next;
+        }
+        
+        // Now second points to the first node of the last n nodes
+        int sum = 0;
+        while (second != NULL) {
+            sum += second->data;
+            second = second->next;
+        }
+        
+        return sum;
+    }
+};
+
+
+Approach 1: Reversing the Linked List
+In this approach, you reverse the linked list, then traverse the reversed list to sum the last n nodes, and possibly reverse the list again to restore its original order (if required).
+
+Steps:
+
+Reverse the list: This requires traversing the entire list once, which takes O(N) time, where N is the number of nodes in the list.
+Sum the last n nodes: After reversing, you sum the first n nodes of the reversed list. This takes O(n) time, where n is the number of nodes to sum.
+(Optional) Reverse the list again: If you need to restore the original list order, you reverse the list again, which takes another O(N) time.
+Total Time Complexity (worst case):
+
+Reversing the list: O(N)
+Summing the last n nodes: O(n)
+(Optional) Restoring the list: O(N)
+Thus, the total time complexity for the worst case (with restoring the list) is O(2N + n) ≈ O(N), as n is usually much smaller than N.
+
+Approach 2: Two Pointer (Sliding Window Technique)
+In this approach, you use two pointers to traverse the list once, without reversing it.
+
+Steps:
+
+Move the first pointer n steps ahead: This takes O(n) time.
+Move both the first and second pointers together until the first reaches the end: This takes O(N - n) time (since you move the pointers from where the first pointer is, which is n steps ahead, to the end).
+Sum the last n nodes: Once the second pointer reaches the first of the last n nodes, summing those n nodes takes O(n) time.
+Total Time Complexity:
+
+Moving the first pointer n steps: O(n)
+Moving both pointers until the first reaches the end: O(N - n)
+Summing the last n nodes: O(n)
+The total time complexity is O(N) because O(N - n + 2n) = O(N).
+
+Key Difference in Time Complexity:
+Approach 1 (Reversing): Worst-case time complexity is O(2N + n) ≈ O(N), but it involves reversing the list, which could be more expensive and require extra steps (especially if restoring the original order is necessary).
+Approach 2 (Two Pointer): The time complexity is O(N), which is more efficient in terms of operations because it only traverses the list once and avoids reversing.
